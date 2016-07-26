@@ -1,0 +1,154 @@
+" https://realpython.com/blog/python/vim-and-python-a-match-made-in-heaven/
+
+set nocompatible              " be iMproved
+set history=256
+set autowrite
+set autoread
+set clipboard+=unamed
+set tags=./tags;$HOME " walk directory tree upto $HOME looking for tags
+set timeout
+
+" Modeline
+set modeline
+set modelines=5 " default numbers of lines to read for modeline instructions
+
+" Match and search
+set hlsearch    " highlight search
+set ignorecase  " Do case in sensitive matching with
+set smartcase   " be sensitive when there's a capital letter
+set incsearch
+
+" Formatting "{{{
+set fo+=o " Automatically insert the current comment leader after hitting 'o' or 'O' in Normal mode.
+set fo-=r " Do not automatically insert a comment leader after an enter
+set fo-=t " Do no auto-wrap text using textwidth (does not apply to comments)
+
+" Buffers
+set hidden
+
+set nowrap
+set textwidth=0                " Don't wrap lines by default
+set wildmode=longest,list      " At command line, complete longest common string, then list alternatives.
+
+set backspace=indent,eol,start        " more powerful backspacing
+
+
+filetype off                  " required
+" set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+
+let mapleader = ","
+
+" alternatively, pass a path where Vundle should install plugins
+"call vundle#begin('~/some/path/here')
+
+" let Vundle manage Vundle, required
+Plugin 'gmarik/Vundle.vim'
+
+
+" Add all your plugins here (note older versions of Vundle used Bundle instead of Plugin)
+Plugin 'tmhedberg/SimpylFold'
+Plugin 'vim-scripts/indentpython.vim'
+Plugin 'Valloric/YouCompleteMe'
+Plugin 'scrooloose/syntastic'
+Plugin 'nvie/vim-flake8'
+Plugin 'jnurmine/Zenburn'
+Plugin 'altercation/vim-colors-solarized'
+Plugin 'scrooloose/nerdtree'
+Plugin 'jistr/vim-nerdtree-tabs'
+Plugin 'kien/ctrlp.vim'
+Plugin 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
+Plugin 'jiangmiao/auto-pairs'
+
+
+" All of your Plugins must be added before the following line
+call vundle#end()            " required
+filetype plugin indent on    " required
+
+set splitbelow
+set splitright
+set encoding=utf-8
+set nu
+
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L>
+nnoremap <C-H> <C-W><C-H>
+
+" Enable folding
+set foldmethod=indent
+set foldlevel=99
+nnoremap <space> za
+
+" PEP8 indentation
+set tabstop=4    " Set the default tabstop
+set softtabstop=4
+set shiftwidth=4 " Set the default shift width for indents
+set expandtab   " Make tabs into spaces (set by tabstop)
+set smarttab " Smarter tab levels
+set fileformat=unix
+
+set autoindent
+set cindent
+set cinoptions=:s,ps,ts,cs
+set cinwords=if,else,while,do,for,switch,case
+
+" Visual "{{{
+set number
+set showmatch  " Show matching brackets.
+set matchtime=5  " Bracket blinking.
+set novisualbell  " No blinking
+set noerrorbells  " No noise.
+set laststatus=2  " Always show status line.
+set vb t_vb= " disable any beeps or flashes on error
+set ruler  " Show ruler
+set showcmd " Display an incomplete command in the lower right corner of the Vim window
+set shortmess=atI " Shortens messages
+
+
+let g:SimpylFold_docstring_preview=1
+
+" Indent according to other filetypes
+au BufNewFile,BufRead *.js, *.html, *.css
+    \ set tabstop=2
+    \ set softtabstop=2
+    \ set shiftwidth=2
+
+" This will mark extra whitespace as bad, and probably color it red.
+" au BufRead,BufNewFile *.py,*.pyw,*.c,*.h match BadWhitespace /\s\+$/
+
+
+"python with virtualenv support
+py << EOF
+import os
+import sys
+if 'VIRTUAL_ENV' in os.environ:
+    project_base_dir = os.environ['VIRTUAL_ENV']
+    activate_this = os.path.join(project_base_dir, 'bin/activate_this.py')
+    execfile(activate_this, dict(__file__=activate_this))
+EOF
+
+let python_highlight_all=1
+syntax on
+
+if has('gui_running')
+    set background=dark
+    colorscheme solarized
+else
+    colorscheme zenburn
+endif
+
+call togglebg#map("<F5>")
+
+let NERDTreeIgnore=['\.pyc$', '\~$'] "ignore files in NERDTree
+set clipboard=unnamed
+
+nmap <leader>n :NERDTreeToggle<CR>
+
+" NerdTree 
+" open nerdtree when no file specified
+autocmd vimenter * if !argc() | NERDTree | endif
+
+set pastetoggle=<F2>
+
